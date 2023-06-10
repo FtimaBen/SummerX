@@ -17,13 +17,61 @@
                 {{ product_form.submit(class_="form-control btn btn-primary") }}
             </div>
         </form>
-        <div class="container m-0 column align-items-center h-100 w-50 p-5 justify-content-center" style="background-color: #228ff5;">
-            <p>{{ output.info |safe }}</p>
+        
+        <div class="card m-0 column align-items-center h-100 w-50 p-2 justify-content-center" style="background-color: #228ff5;">
+            <p>{{ output.info|safe }}</p>
+            <!-- without this if the output would be : Product : Review:  -->
             {% if output.product %}
-                <h3 class="vr mb-3"><bold>Product:</bold>{{ output.product |safe }}</h3>
-                <p class="vr"><bold>Review:</bold>{{ output.summary |safe}}</p>
+                <h5 class="vr"><bold>Product:</bold>{{ output.product |safe }}</h5>
+                <img src={{output.img_src}} class="w-40 h-40"/>
+                <p class="vr overflow-auto"><bold>Review:</bold>{{ output.summary |safe}}</p>
             {% endif %}
         </div>
+    
     </div>
 </body>
 </html>
+
+{% if rainForest_api != False %}
+<script>
+
+async function loadReviews() {
+    let product
+    let reviews = '', body
+    
+    const url = "{{ rainForest_api }}".replaceAll('&amp;', '&');
+    await fetch(url).then(response => response.json())
+        .then(data => {
+            body = {
+                'product': data.product.title,
+                'reviews': data.reviews,
+                'img_src': data.product.main_image.link
+            }
+        }).catch(error => {
+        // Handle any errors that occurred during the request
+        console.error('Error:', error);
+    });
+
+    const csrfToken = "{{ csrf_token() }}";
+
+    await fetch(location.href, {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json",
+            'Accept':'application/json',
+            'X-CSRF-Token': csrfToken,
+          },
+          body: JSON.stringify(body),
+        })
+        .then(response => console.log('res' + response))
+        .then(data => {
+            console.log(data)
+        }).catch(error => {
+        // Handle any errors that occurred during the request
+        console.error('Error:', error);
+    });
+
+}
+loadReviews();
+</script>
+{% endif %}

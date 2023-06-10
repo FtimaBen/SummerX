@@ -6,24 +6,31 @@ from langchain.chains.summarize import load_summarize_chain
 from langchain.docstore.document import Document
 
 import requests
-import json
 
 class SummerizX():
-  #model parameters 
+  #model parameters
   temperature = 0.2
   chain_type = 'stuff'
+  reviews = None
 
-  def __init__(self, url, openai_api_key='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', rainforest_api_key='C85C514238954FCA9F8E5510D1DED6A5'):
+  def __init__(self, url=None, openai_api_key='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', rainforest_api_key='C85C514238954FCA9F8E5510D1DED6A5'):
     self.url = url
     self.openai_api_key = openai_api_key
     self.rainforest_api_key = rainforest_api_key
-  
+
   def summerize(self):
-    reviews, product = self.loadAmazonReviews()
-    reviews, reviews_2 = self.reviewsProcessing(reviews)
+    
+    #if the request fails the api key is sent to the client to fetch
+    if self.reviews == None:
+      try:
+        self.reviews, product, img_src = self.loadAmazonReviews()
+      except:
+        return f'https://api.rainforestapi.com/request?api_key={self.rainforest_api_key}&type=reviews&url={self.url}'
+    
+    reviews, reviews_2 = self.reviewsProcessing(self.reviews)
     summary_1, summary_2 = self.generateSummary(reviews, reviews_2)
 
-    return product, summary_1, summary_2
+    return product, img_src, summary_1
 
   ###########################################
   #load the reviews using the rainforest api
@@ -42,10 +49,10 @@ class SummerizX():
     #review object
     reviews = api_result.json()
 
-    return reviews.get('reviews'), reviews.get('product').get('title')
+    return reviews.get('reviews'), reviews.get('product').get('title'), reviews.get('img_src')
 
   ###########################################
-  # text precessing: 
+  # text precessing:
   # remove stop words
   # remove punctuations
   # stemming
