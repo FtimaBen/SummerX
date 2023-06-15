@@ -1,7 +1,7 @@
 
 (async function () {
     const output = document.createElement('div');
-    const END$POINT = 'FatBen.pythonanywhere.com';
+    const END$POINT = 'http://fatben.pythonanywhere.com/';
     const reviewNodes = document.querySelectorAll('.review-text-content span');
     const reviews = Array();
     const message = "<div class='remove_after'><h3 class='remove'>X</h3> <br> SummerX is loading the review, please wait</div>";
@@ -16,7 +16,7 @@
 
     if (reviewNodes.length == 0 || activePopup == false) return output.innerHTML = 'No reviews available for this product';
 
-    await fetch('http://127.0.0.1:5000/', {
+    await fetch(END$POINT, {
           method: 'POST',
           headers: {
             "Content-Type": "application/json",
