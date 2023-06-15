@@ -1,0 +1,22 @@
+{
+    "manifest_version": 3,
+    "name": "SummerX",
+    "version": "1.0",
+    "content_scripts": [
+        {
+            "matches": [
+                "https://www.amazon.com/*/dp/*",
+                "https://www.amazon.com/*/product-reviews/*/*"
+            ],
+            "js": ["content_script/SummerX.js"],
+            "css": ["content_script/SummerX.css"]
+        }
+    ],
+    "action": {
+        "default_popup": "popup/SummerX.html",
+        "js": ["popup/SummerX.js"],
+        "default_title": "SummerX"
+    },
+    "permissions": ["storage"]
+}
+
