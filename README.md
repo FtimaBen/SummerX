@@ -1,4 +1,4 @@
 # SummerX
 - This is a browser extension to runs on amazon products; 
-- The Server contains the server, you can ignore this file
+- ignore the server directory 
 - The JS_extension directory has the extension load it on the browser using the developer mode
