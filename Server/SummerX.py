@@ -13,7 +13,7 @@ class SummerizX():
   chain_type = 'stuff'
   reviews = None
 
-  def __init__(self, reviews, openai_api_key='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'):
+  def __init__(self, reviews, openai_api_key):
     self.openai_api_key = openai_api_key
     self.reviews = reviews
 
